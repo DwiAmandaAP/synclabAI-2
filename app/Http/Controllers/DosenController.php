@@ -42,7 +42,7 @@ class DosenController extends Controller
             // Count validation status
             $validatedCount = Nilai::whereHas('pertemuan', function($q) use ($praktikum) {
                 $q->where('id_praktikum', $praktikum->id);
-            })->where('status', 'Tervalidasi')->count();
+            })->where('status', 'Terkonfirmasi')->count();
 
             $pendingCount = Nilai::whereHas('pertemuan', function($q) use ($praktikum) {
                 $q->where('id_praktikum', $praktikum->id);
@@ -416,7 +416,7 @@ class DosenController extends Controller
     public function validasiNilai(Request $request)
     {
         $filterPraktikum = $request->get('praktikum', 'all');
-        $filterStatus = $request->get('status', 'pending');
+        $filterStatus = $request->get('status', 'all');
         
         $nilais = Nilai::with('user', 'pertemuan.praktikum')
             ->when($filterPraktikum != 'all', function($q) use ($filterPraktikum) {
@@ -430,8 +430,9 @@ class DosenController extends Controller
                 });
             })
             ->when($filterStatus == 'validated', function($q) {
-                return $q->where('status', 'Tervalidasi');
+                return $q->where('status', 'Terkonfirmasi');
             })
+            ->orderBy('created_at', 'desc')
             ->paginate(20);
         
         $praktikums = Praktikum::all();
@@ -454,10 +455,14 @@ class DosenController extends Controller
         $nilai->update([
             'nilai_akhir' => $request->nilai_akhir,
             'komentar' => $request->komentar,
-            'status' => 'Tervalidasi',
+            'status' => 'Terkonfirmasi',
         ]);
+
+         if ($request->wantsJson() || $request->ajax()) {
+             return response()->json(['success' => true, 'message' => 'Nilai berhasil divalidasi']);
+        }
         
-        return response()->json(['success' => true, 'message' => 'Nilai berhasil divalidasi']);
+        return back()->with('success', 'Nilai berhasil disimpan!');
     }
 
     /**

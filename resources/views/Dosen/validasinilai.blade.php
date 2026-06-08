@@ -7,6 +7,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    {{-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"> --}}
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -127,7 +128,6 @@
 
         /* ── MAIN ───────────────────────────────────── */
         .main {
-            margin-left: var(--sidebar-width);
             flex: 1;
             padding: 32px 32px 48px;
             min-height: 100vh;
@@ -419,88 +419,113 @@
 
         /* ── PAGINATION ──────────────────────────────── */
         .pagination-wrap {
-            padding: 16px 24px;
+            padding: 20px 24px;
             border-top: 1px solid var(--border);
             display: flex;
             align-items: center;
             justify-content: space-between;
             gap: 12px;
             flex-wrap: wrap;
+            background: var(--white);
         }
 
         .pagination-info {
             font-size: 13px;
             color: var(--text-mid);
+            font-weight: 500;
         }
 
+        /* Bootstrap Pagination Override */
         .pagination {
             display: flex;
             align-items: center;
             gap: 4px;
             list-style: none;
+            margin: 0;
         }
 
-        .pagination li a,
-        .pagination li span {
+        .pagination .page-item {
+            margin: 0;
+        }
+
+        .pagination .page-link {
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 34px;
-            height: 34px;
-            border-radius: 8px;
+            width: 36px;
+            height: 36px;
+            padding: 0;
+            border-radius: 6px;
             font-size: 13px;
             font-weight: 600;
             text-decoration: none;
             color: var(--text-mid);
             border: 1.5px solid var(--border);
-            transition: all 0.15s;
+            background: var(--white);
+            transition: all 0.2s ease;
             line-height: 1;
         }
 
-        .pagination li a:hover {
+        .pagination .page-link:hover {
             background: var(--accent);
             color: #fff;
             border-color: var(--accent);
+            box-shadow: 0 2px 8px rgba(79, 142, 247, 0.2);
         }
 
-        .pagination li.active span,
-        .pagination li span[aria-current="page"] {
+        .pagination .page-item.active .page-link {
             background: var(--accent);
             color: #fff;
             border-color: var(--accent);
+            box-shadow: 0 2px 8px rgba(79, 142, 247, 0.3);
         }
 
-        .pagination li.disabled span {
-            opacity: 0.4;
-            cursor: default;
+        .pagination .page-item.disabled .page-link {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background: var(--white);
+            border-color: var(--border);
         }
 
-        /* Override Laravel default pagination SVG arrows size */
-        .pagination li a svg,
-        .pagination li span svg {
-            width: 12px !important;
-            height: 12px !important;
+        .pagination .page-item.disabled .page-link:hover {
+            background: var(--white);
+            color: var(--text-mid);
+            border-color: var(--border);
+        }
+
+        /* SVG icon sizing */
+        .pagination .page-link svg {
+            width: 14px !important;
+            height: 14px !important;
         }
 
         /* ── MODAL ───────────────────────────────────── */
         .modal-overlay {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.45);
-            z-index: 200;
-            align-items: center;
-            justify-content: center;
+            display: none !important;
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            bottom: 0 !important;
+            background: rgba(0,0,0,0.45) !important;
+            z-index: 9999 !important;
+            align-items: center !important;
+            justify-content: center !important;
         }
-        .modal-overlay.open { display: flex; }
+        .modal-overlay.open { 
+            display: flex !important; 
+        }
 
         .modal {
-            background: var(--white);
-            border-radius: var(--radius);
-            padding: 28px 32px;
-            width: 420px;
-            max-width: 95vw;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.18);
+            background: var(--white) !important;
+            border-radius: var(--radius) !important;
+            padding: 28px 32px !important;
+            width: 420px !important;
+            max-width: 95vw !important;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.18) !important;
+            position: relative !important;
+            border: none !important;
+            margin: auto !important;
         }
 
         .modal h3 {
@@ -508,6 +533,10 @@
             font-weight: 700;
             margin-bottom: 20px;
             color: var(--text-dark);
+        }
+
+        .modal form {
+            display: block;
         }
 
         .form-group {
@@ -595,34 +624,7 @@
 <body>
 
 <!-- ── SIDEBAR ────────────────────────────────────────── -->
-<aside class="sidebar">
-    <div class="sidebar-profile">
-        <div class="sidebar-avatar"><i class="fas fa-chalkboard-teacher"></i></div>
-        <div class="sidebar-name">{{ Auth::user()->nama ?? Auth::user()->name ?? 'Dosen' }}</div>
-        <div class="sidebar-role">{{ Auth::user()->prodi ?? 'Dosen' }}</div>
-    </div>
-
-    <nav class="sidebar-nav">
-        <a href="{{ route('dashboard') }}" class="nav-item">
-            <i class="fas fa-chart-line"></i> Dashboard
-        </a>
-        <a href="{{ route('monitoring') }}" class="nav-item">
-            <i class="fas fa-eye"></i> Monitoring
-        </a>
-        <a href="{{ route('validasinilai') }}" class="nav-item active">
-            <i class="fas fa-check-double"></i> Validasi Nilai
-        </a>
-        <a href="{{ route('presensi') }}" class="nav-item">
-            <i class="fas fa-fingerprint"></i> Presensi
-        </a>
-    </nav>
-
-    <div class="sidebar-logout">
-        <a href="{{ route('logout') }}" class="btn-logout">
-            <i class="fas fa-sign-out-alt"></i> Log Out
-        </a>
-    </div>
-</aside>
+@include('dosen.partials.sidebar')
 
 <!-- ── MAIN ───────────────────────────────────────────── -->
 <main class="main">
@@ -630,7 +632,7 @@
     @php
         // Compute stats across ALL records (not just current page)
         $totalNilai      = \App\Models\Nilai::count();
-        $totalValidated  = \App\Models\Nilai::where('status', 'Tervalidasi')->count();
+        $totalValidated  = \App\Models\Nilai::where('status', 'Terkonfirmasi')->count();
         $totalPending    = \App\Models\Nilai::where(function($q){ $q->whereNull('status')->orWhere('status','Pending'); })->count();
         $avgNilaiAkhir   = number_format(\App\Models\Nilai::avg('nilai_akhir') ?? 0, 1);
     @endphp
@@ -757,7 +759,7 @@
                         <td class="td-num">{{ $nilai->nilai_laporan ?? 0 }}</td>
                         <td class="td-num bold">{{ number_format($nilai->nilai_akhir ?? 0, 1) }}</td>
                         <td>
-                            @if($nilai->status === 'Tervalidasi')
+                            @if($nilai->status === 'Terkonfirmasi')
                                 <span class="badge badge-validated">
                                     <span class="badge-dot"></span> Tervalidasi
                                 </span>
@@ -769,7 +771,7 @@
                         </td>
                         <td>
                             <div class="actions">
-                                @if($nilai->status !== 'Tervalidasi')
+                                @if($nilai->status !== 'Terkonfirmasi')
                                 <button class="btn-action btn-validate"
                                         title="Validasi"
                                         onclick="openValidasiModal({{ $nilai->id }}, {{ $nilai->nilai_akhir ?? 0 }})">
@@ -780,11 +782,6 @@
                                         title="Edit"
                                         onclick="openEditModal({{ $nilai->id }}, {{ $nilai->nilai_pretest ?? 0 }}, {{ $nilai->nilai_laporan ?? 0 }}, {{ $nilai->nilai_akhir ?? 0 }})">
                                     <i class="fas fa-edit"></i>
-                                </button>
-                                <button class="btn-action btn-detail"
-                                        title="Detail"
-                                        onclick="openDetailModal({{ $nilai->id }})">
-                                    <i class="fas fa-eye"></i>
                                 </button>
                                 <button class="btn-action btn-delete"
                                         title="Hapus"
@@ -815,7 +812,7 @@
                 Menampilkan {{ $nilais->firstItem() }}–{{ $nilais->lastItem() }}
                 dari {{ $nilais->total() }} data
             </div>
-            {{ $nilais->appends(request()->query())->links() }}
+            {{ $nilais->appends(request()->query())->links('pagination::bootstrap-5') }}
         </div>
         @endif
     </div>
