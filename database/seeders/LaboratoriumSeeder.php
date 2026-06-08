@@ -48,7 +48,10 @@ class LaboratoriumSeeder extends Seeder
         ];
 
         foreach ($laboratoriums as $lab) {
-            Laboratorium::create($lab);
+            Laboratorium::updateOrCreate(
+                ['kode_laboratorium' => $lab['kode_laboratorium']],
+                $lab
+            );
         }
     }
 }

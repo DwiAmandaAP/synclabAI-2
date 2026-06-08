@@ -24,7 +24,6 @@ class PengumpulanLaporanSeeder extends Seeder
             return;
         }
 
-        $pengumpulans = [];
         $status_options = ['Disubmit', 'Dalam Review', 'Diterima', 'Ditolak', 'Terlambat'];
 
         // Untuk setiap praktikan dan laporan yang ada di pertemuan, buat pengumpulan
@@ -33,11 +32,7 @@ class PengumpulanLaporanSeeder extends Seeder
                 // Cari laporan untuk pertemuan ini
                 $laporan = $laporans->firstWhere('id_pertemuan', $pertemuan->id);
 
-                if ($laporan && !PengumpulanLaporan::where('id_pertemuan', $pertemuan->id)
-                    ->where('id_user', $praktikan->id)
-                    ->where('id_laporan', $laporan->id)
-                    ->exists()) {
-
+                if ($laporan) {
                     // Probability: 85% submit, 15% tidak submit
                     if (rand(0, 100) <= 85) {
                         // Probability status
@@ -56,27 +51,23 @@ class PengumpulanLaporanSeeder extends Seeder
                             $nilai = rand(40, 70);
                         }
 
-                        $pengumpulans[] = [
-                            'id_pertemuan' => $pertemuan->id,
-                            'id_user' => $praktikan->id,
-                            'id_laporan' => $laporan->id,
-                            'file_path' => 'uploads/laporan/' . $praktikan->nomor_induk . '_' . $laporan->id . '.pdf',
-                            'keterangan' => $this->generateKeterangan(),
-                            'status' => $status,
-                            'nilai' => $nilai,
-                            'komentar' => $status === 'Diterima' ? $this->generateKomentar() : null,
-                            'created_at' => now(),
-                            'updated_at' => now(),
-                        ];
+                        // Update or create the pengumpulan laporan
+                        PengumpulanLaporan::updateOrCreate(
+                            [
+                                'id_pertemuan' => $pertemuan->id,
+                                'id_user' => $praktikan->id,
+                                'id_laporan' => $laporan->id,
+                            ],
+                            [
+                                'file_path' => 'uploads/laporan/' . $praktikan->nomor_induk . '_' . $laporan->id . '.pdf',
+                                'keterangan' => $this->generateKeterangan(),
+                                'status' => $status,
+                                'nilai' => $nilai,
+                                'komentar' => $status === 'Diterima' ? $this->generateKomentar() : null,
+                            ]
+                        );
                     }
                 }
-            }
-        }
-
-        // Insert dalam batch
-        if (!empty($pengumpulans)) {
-            foreach (array_chunk($pengumpulans, 50) as $chunk) {
-                PengumpulanLaporan::insert($chunk);
             }
         }
     }

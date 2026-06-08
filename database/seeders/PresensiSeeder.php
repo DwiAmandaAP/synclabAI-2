@@ -67,10 +67,19 @@ class PresensiSeeder extends Seeder
             }
         }
 
-        // Insert dalam batch
+        // Update or create each presensi record to ensure idempotency
         if (!empty($presensis)) {
-            foreach (array_chunk($presensis, 50) as $chunk) {
-                Presensi::insert($chunk);
+            foreach ($presensis as $presensi) {
+                Presensi::updateOrCreate(
+                    [
+                        'id_pertemuan' => $presensi['id_pertemuan'],
+                        'id_user' => $presensi['id_user'],
+                    ],
+                    [
+                        'kehadiran' => $presensi['kehadiran'],
+                        'status' => $presensi['status'],
+                    ]
+                );
             }
         }
     }

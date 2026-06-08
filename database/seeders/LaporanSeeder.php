@@ -149,7 +149,19 @@ class LaporanSeeder extends Seeder
 
         foreach ($laporans as $laporan) {
             if ($laporan['id_pertemuan']) {
-                Laporan::create($laporan);
+                Laporan::updateOrCreate(
+                    [
+                        'id_pertemuan' => $laporan['id_pertemuan'],
+                        'judul_laporan' => $laporan['judul_laporan'],
+                    ],
+                    [
+                        'open_date' => $laporan['open_date'],
+                        'close_date' => $laporan['close_date'],
+                        'open_time' => $laporan['open_time'],
+                        'close_time' => $laporan['close_time'],
+                        'deskripsi' => $laporan['deskripsi'],
+                    ]
+                );
             }
         }
     }

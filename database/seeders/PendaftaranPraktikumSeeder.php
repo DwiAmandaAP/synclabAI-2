@@ -67,13 +67,17 @@ class PendaftaranPraktikumSeeder extends Seeder
         }
     }
 
-    // Deduplikasi berdasarkan id_jadwal + id_user (tetap sebagai safety net)
-    $chunks = collect($pendaftarans)
-        ->unique(fn($item) => $item['id_jadwal'] . '_' . $item['id_user'])
-        ->chunk(100);
-
-    foreach ($chunks as $chunk) {
-        PendaftaranPraktikum::insert($chunk->toArray());
+    // Update or create each record to ensure idempotency
+    foreach ($pendaftarans as $pendaftaran) {
+        PendaftaranPraktikum::updateOrCreate(
+            [
+                'id_jadwal' => $pendaftaran['id_jadwal'],
+                'id_user' => $pendaftaran['id_user'],
+            ],
+            [
+                'role' => $pendaftaran['role'],
+            ]
+        );
     }
 }
 }

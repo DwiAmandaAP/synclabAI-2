@@ -41,14 +41,16 @@ class UserSeeder extends Seeder
         ];
 
         foreach ($users as [$nama, $email, $nomor_induk, $role]) {
-            User::create([
-                'nama' => $nama,
-                'email' => $email,
-                'nohp' => $this->phone(),
-                'password' => Hash::make('password123'),
-                'nomor_induk' => $nomor_induk,
-                'role' => $role,
-            ]);
+            User::updateOrCreate(
+                ['email' => $email],
+                [
+                    'nama' => $nama,
+                    'nohp' => $this->phone(),
+                    'password' => Hash::make('password123'),
+                    'nomor_induk' => $nomor_induk,
+                    'role' => $role,
+                ]
+            );
         }
     }
 }
