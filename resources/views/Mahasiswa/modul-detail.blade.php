@@ -167,7 +167,7 @@
 </div>
 
 <!-- Loading Modal -->
-<div id="loadingModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; display: flex; align-items: center; justify-content: center;">
+<div id="loadingModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
     <div style="background: white; padding: 40px; border-radius: 8px; text-align: center;">
         <div style="width: 50px; height: 50px; border: 4px solid #f3f3f3; border-top: 4px solid #667eea; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 20px;"></div>
         <p style="font-size: 16px; color: #333; margin: 0;">Sedang generate flashcard dari AI...</p>
@@ -189,6 +189,9 @@
         background: #f8d7da;
         border-color: #f5c6cb;
         color: #721c24;
+    }
+    #loadingModal.active {
+    display: flex !important;
     }
     @keyframes spin {
         0% { transform: rotate(0deg); }
@@ -237,7 +240,8 @@
     }
 
     function showLoading(show) {
-        document.getElementById('loadingModal').style.display = show ? 'flex' : 'none';
+        const modal = document.getElementById('loadingModal');
+        modal.style.display = show ? 'flex' : 'none';
     }
 </script>
     </div>

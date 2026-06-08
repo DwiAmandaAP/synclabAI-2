@@ -17,7 +17,7 @@ use App\Models\StudentAnswer;
 class AiController extends Controller
 {
     // Masukkan URL service Python FastAPI kamu
-    private $baseUrl = 'http://127.0.0.1:8000';
+    private $baseUrl = 'http://127.0.0.1:8001';
 
     /**
      * 1. TRIGGER GENERATE AI (Flashcard & Soal) dari PDF Modul
@@ -38,7 +38,8 @@ class AiController extends Controller
         $fileName = basename($filePath);
 
         // --- PROSES A: Ambil Flashcard dari FastAPI ---
-        $responseFlashcard = Http::attach('file', $fileContent, $fileName)
+        $responseFlashcard = Http::timeout(120)
+                                 ->attach('file', $fileContent, $fileName)
                                  ->post($this->baseUrl . '/generate-flashcards');
 
         if ($responseFlashcard->successful()) {
@@ -53,7 +54,8 @@ class AiController extends Controller
         }
 
         // --- PROSES B: Ambil Soal Kuis dari FastAPI ---
-        $responseQuiz = Http::attach('file', $fileContent, $fileName)
+        $responseQuiz = Http::timeout(120)
+                             ->attach('file', $fileContent, $fileName)
                              ->post($this->baseUrl . '/generate-quiz');
 
         if ($responseQuiz->successful()) {
@@ -113,7 +115,8 @@ class AiController extends Controller
             $fileName = basename($filePath);
 
             // Ambil Soal dari FastAPI
-            $responseQuiz = Http::attach('file', $fileContent, $fileName)
+            $responseQuiz = Http::timeout(120)
+                                 ->attach('file', $fileContent, $fileName)
                                  ->post($this->baseUrl . '/generate-quiz');
 
             if ($responseQuiz->successful()) {
@@ -170,7 +173,8 @@ class AiController extends Controller
             $fileName = basename($filePath);
 
             // Ambil Flashcard dari FastAPI
-            $responseFlashcard = Http::attach('file', $fileContent, $fileName)
+            $responseFlashcard = Http::timeout(120)
+                                     ->attach('file', $fileContent, $fileName)
                                      ->post($this->baseUrl . '/generate-flashcards');
 
             if ($responseFlashcard->successful()) {

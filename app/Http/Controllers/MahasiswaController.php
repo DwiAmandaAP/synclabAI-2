@@ -15,6 +15,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use App\Models\StudentAnswer;
+use App\Models\Flashcard;
+use App\Models\FlashcardProgress;
 
 class MahasiswaController extends Controller
 {
@@ -288,7 +290,7 @@ class MahasiswaController extends Controller
             ->get();
 
         // Kelompokkan berdasarkan pertemuan
-        $groupedFlashcards = $flashcards->groupBy('modul.id_pertemuan');
+        $groupedFlashcards = $flashcards->groupBy(fn($card) => $card->modul?->id_pertemuan);
 
         return view('Mahasiswa.flashcard', compact('groupedFlashcards', 'flashcards'));
     }
@@ -326,7 +328,13 @@ class MahasiswaController extends Controller
             return $progress->next_review_date <= now()->toDateString();
         })->values();
 
-        return view('Mahasiswa.flashcard-detail', compact('pertemuan', 'modul', 'flashcardsToReview', 'allFlashcards'));
+        $flashcardsJson = $flashcardsToReview->map(fn($card) => [
+        'id'    => $card->id,
+        'front' => $card->front,
+        'back'  => $card->back,
+    ])->values();
+
+        return view('Mahasiswa.flashcard-detail', compact('pertemuan', 'modul', 'flashcardsToReview', 'allFlashcards', 'flashcardsJson'));
     }
 
     function getMahasiswa(Request $request)

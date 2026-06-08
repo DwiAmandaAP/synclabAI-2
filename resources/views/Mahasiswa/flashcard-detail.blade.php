@@ -66,19 +66,17 @@
     <div id="flashcardContainer" style="perspective: 1000px;">
         @if($flashcardsToReview->count() > 0)
             <!-- Flashcard -->
-            <div id="flashcard" class="flashcard" 
-                 style="background: white; 
-                         min-height: 300px; 
-                         border-radius: 12px; 
-                         box-shadow: 0 4px 12px rgba(0,0,0,0.15); 
-                         padding: 40px; 
-                         cursor: pointer;
-                         transition: transform 0.6s;
-                         transform-style: preserve-3d;
-                         text-align: center;
-                         display: flex;
-                         align-items: center;
-                         justify-content: center;">
+                <<div id="flashcard" class="flashcard" 
+                style="background: white; 
+                min-height: 300px; 
+                border-radius: 12px; 
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15); 
+                padding: 40px; 
+                cursor: pointer;
+                text-align: center;
+                display: flex;
+                align-items: center;
+                justify-content: center;">
                 
                 <div style="pointer-events: none;">
                     <p id="cardLabel" style="margin: 0 0 20px 0; font-size: 12px; text-transform: uppercase; color: #999; letter-spacing: 1px;">
@@ -196,36 +194,44 @@
     .flashcard:hover {
         box-shadow: 0 8px 20px rgba(0,0,0,0.2);
     }
+    /* Animasi flip yang benar — pakai scaleX bukan rotateY */
+    #flashcard {
+        transition: transform 0.15s ease-in;
+    }
+    #flashcard.is-flipping {
+        transform: scaleX(0) !important;
+    }
+
+    /* Warna berbeda saat menampilkan jawaban */
+    #flashcard.showing-back {
+        background: linear-gradient(135deg, #f0f7ff 0%, #e8f0fe 100%) !important;
+        border: 2px solid #c5cae9;
+    }
+
 </style>
 
 <script>
-    const flashcardsData = @json($flashcardsToReview->map(function($card) {
-        return [
-            'id' => $card->id,
-            'front' => $card->front,
-            'back' => $card->back,
-        ];
-    }));
+    const flashcardsData = @json($flashcardsJson);
 
     let currentIndex = 0;
     let isFlipped = false;
 
     function updateCard() {
         const card = flashcardsData[currentIndex];
-        const cardContent = document.getElementById('cardContent');
-        const cardLabel = document.getElementById('cardLabel');
-        const progressText = document.getElementById('progressText');
-        const progressBar = document.getElementById('progressBar');
-        const flashcardDiv = document.getElementById('flashcard');
-
         if (!card) return;
 
-        // Reset flip state
-        isFlipped = false;
-        flashcardDiv.style.transform = 'rotateY(0deg)';
+        const flashcardDiv   = document.getElementById('flashcard');
+        const cardContent    = document.getElementById('cardContent');
+        const cardLabel      = document.getElementById('cardLabel');
+        const progressText   = document.getElementById('progressText');
+        const progressBar    = document.getElementById('progressBar');
 
-        // Update content
-        cardLabel.textContent = 'Pertanyaan';
+        // Reset ke sisi depan tanpa animasi
+        isFlipped = false;
+        flashcardDiv.classList.remove('is-flipping', 'showing-back');
+        flashcardDiv.style.transform = '';
+
+        cardLabel.textContent   = 'Pertanyaan';
         cardContent.textContent = card.front;
 
         // Update progress
@@ -233,29 +239,46 @@
         const progress = ((currentIndex + 1) / flashcardsData.length) * 100;
         progressBar.style.width = progress + '%';
 
-        // Add click to flip listener
         flashcardDiv.onclick = flipCard;
     }
 
     function flipCard() {
         if (!flashcardsData[currentIndex]) return;
 
-        const card = flashcardsData[currentIndex];
-        const cardContent = document.getElementById('cardContent');
-        const cardLabel = document.getElementById('cardLabel');
+        const card         = flashcardsData[currentIndex];
         const flashcardDiv = document.getElementById('flashcard');
 
-        isFlipped = !isFlipped;
+        // Step 1: Collapse kartu (scaleX → 0)
+        flashcardDiv.style.transition = 'transform 0.15s ease-in';
+        flashcardDiv.classList.add('is-flipping');
 
-        if (isFlipped) {
-            flashcardDiv.style.transform = 'rotateY(180deg)';
-            cardLabel.textContent = 'Jawaban';
-            cardContent.textContent = card.back;
-        } else {
-            flashcardDiv.style.transform = 'rotateY(0deg)';
-            cardLabel.textContent = 'Pertanyaan';
-            cardContent.textContent = card.front;
-        }
+        setTimeout(() => {
+            // Step 2: Saat kartu tidak terlihat, ganti konten
+            isFlipped = !isFlipped;
+
+            const cardContent = document.getElementById('cardContent');
+            const cardLabel   = document.getElementById('cardLabel');
+
+            if (isFlipped) {
+                cardLabel.textContent   = 'Jawaban';
+                cardContent.textContent = card.back;
+                flashcardDiv.classList.add('showing-back');
+            } else {
+                cardLabel.textContent   = 'Pertanyaan';
+                cardContent.textContent = card.front;
+                flashcardDiv.classList.remove('showing-back');
+            }
+
+            // Step 3: Expand kartu kembali
+            flashcardDiv.style.transition = 'transform 0.15s ease-out';
+            flashcardDiv.classList.remove('is-flipping');
+
+            // Bersihkan inline transition setelah animasi selesai
+            setTimeout(() => {
+                flashcardDiv.style.transition = '';
+            }, 150);
+
+        }, 150); // Tunggu collapse selesai
     }
 
     function submitRating(score) {
@@ -272,9 +295,7 @@
         })
         .then(response => response.json())
         .then(data => {
-            if (data.message) {
-                console.log(data.message);
-            }
+            if (data.message) console.log(data.message);
             nextCard();
         })
         .catch(error => console.error('Error:', error));
@@ -297,29 +318,21 @@
         }
     }
 
-    // Setup rating buttons
+    // Rating buttons
     document.querySelectorAll('.rating-btn').forEach(btn => {
         btn.addEventListener('click', function() {
-            const score = parseInt(this.dataset.score);
-            submitRating(score);
+            submitRating(parseInt(this.dataset.score));
         });
     });
 
     // Initialize
-    document.addEventListener('DOMContentLoaded', function() {
-        updateCard();
-    });
+    document.addEventListener('DOMContentLoaded', updateCard);
 
-    // Keyboard shortcuts
+    // Keyboard shortcuts: Spasi = flip, ← → = navigasi
     document.addEventListener('keydown', function(e) {
-        if (e.key === ' ') {
-            e.preventDefault();
-            flipCard();
-        } else if (e.key === 'ArrowLeft') {
-            previousCard();
-        } else if (e.key === 'ArrowRight') {
-            nextCard();
-        }
+        if (e.key === ' ')           { e.preventDefault(); flipCard(); }
+        else if (e.key === 'ArrowLeft')  previousCard();
+        else if (e.key === 'ArrowRight') nextCard();
     });
 </script>
     </div>
