@@ -89,7 +89,7 @@ class NilaiController extends Controller
             'pretest'     => $nilai->nilai_pretest ?? 0,
             'laporan'     => $nilai->nilai_laporan ?? 0,
             'nilai_akhir' => $nilai->nilai_akhir ?? 0,
-            'validated'   => $nilai->status === 'Tervalidasi',
+            'validated'   => $nilai->status === 'Terkonfirmasi',
             'status'      => $nilai->status ?? 'Pending',
         ]);
 
@@ -178,7 +178,7 @@ class NilaiController extends Controller
 
             $this->saveNilaiData($nilai, $request->nilai_pretest, $request->nilai_laporan);
 
-            if ($request->ajax()) {
+            if ($request->wantsJson() || $request->ajax()) {
                 return response()->json([
                     'success' => true,
                     'message' => 'Nilai berhasil disimpan.',
@@ -186,17 +186,17 @@ class NilaiController extends Controller
                 ]);
             }
 
-            return redirect()->route('addNilai')->with('success', 'Nilai berhasil disimpan!');
+            return back()->with('success', 'Nilai berhasil disimpan!');
 
         } catch (\Exception $e) {
-            if ($request->ajax()) {
+            if ($request->wantsJson() || $request->ajax()) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Gagal menyimpan nilai: ' . $e->getMessage(),
                 ], 500);
             }
 
-            return redirect()->route('addNilai')->with('error', 'Gagal menyimpan nilai: ' . $e->getMessage());
+            return back()->with('error', 'Gagal menyimpan nilai: ' . $e->getMessage());
         }
     }
 
@@ -208,10 +208,10 @@ class NilaiController extends Controller
         try {
             Nilai::findOrFail($id)->delete();
 
-            return redirect()->route('addNilai')->with('success', 'Nilai berhasil dihapus!');
+            return redirect()->back()->with('success', 'Nilai berhasil dihapus!');
 
         } catch (\Exception $e) {
-            return redirect()->route('addNilai')->with('error', 'Gagal menghapus nilai: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Gagal menghapus nilai: ' . $e->getMessage());
         }
     }
 

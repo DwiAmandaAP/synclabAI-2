@@ -73,19 +73,15 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('dosen')->middleware('checkRole:Dosen')->group(function () {
         Route::get('/dosen', [DosenController::class, 'index'])->name('dashboard');
         Route::get('/monitoring', [DosenController::class, 'monitoring'])->name('monitoring');
+
         Route::get('/presensi', [DosenController::class, 'presensi'])->name('dosenPresensi');
         Route::put('/presensi/{id}', [DosenController::class, 'updatePresensi']);
+
         Route::get('/validasi-nilai', [DosenController::class, 'validasiNilai'])->name('validasinilai');
         Route::post('/validasi-nilai/{id}', [DosenController::class, 'storeValidasiNilai']);
+
         Route::get('/status-pendaftaran', [DosenController::class, 'statusPendaftaran'])->name('statuspendaftaran');
         Route::get('/manage-asisten', [DosenController::class, 'manageAsisten'])->name('manageAsisten');
-        Route::post('/manage-asisten', [DosenController::class, 'storeAsisten']);
-        Route::put('/manage-asisten/{id}', [DosenController::class, 'updateAsisten']);
-        Route::delete('/manage-asisten/{id}', [DosenController::class, 'destroyAsisten']);
-        Route::get('/manage-laboran', [DosenController::class, 'manageLaboran'])->name('manageLaboran');
-        Route::post('/manage-laboran', [DosenController::class, 'storeLaboran']);
-        Route::put('/manage-laboran/{id}', [DosenController::class, 'updateLaboran']);
-        Route::delete('/manage-laboran/{id}', [DosenController::class, 'destroyLaboran']);
     });
 
     // ==========================================
@@ -141,25 +137,34 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/praktikum', [PraktikumController::class, 'store'])->name('addPraktikum');
         Route::put('/praktikum/{id}', [PraktikumController::class, 'update'])->name('updatePraktikum');
         Route::delete('/praktikum/{id}', [PraktikumController::class, 'destroy'])->name('deletePraktikum');
+
         Route::get('/user', [UserController::class, 'index'])->name('masterUser');
         Route::post('/user', [UserController::class, 'store'])->name('addUser');
         Route::put('/user/{id}', [UserController::class, 'update'])->name('updateUser');
         Route::delete('/user/{id}', [UserController::class, 'destroy'])->name('deleteUser');
+
         Route::get('/laboratorium', [LaboratoriumController::class, 'index'])->name('masterLaboratorium');
         Route::post('/laboratorium', [LaboratoriumController::class, 'store'])->name('addLaboratorium');
         Route::put('/laboratorium/{id}', [LaboratoriumController::class, 'update'])->name('updateLaboratorium');
         Route::delete('/laboratorium/{id}', [LaboratoriumController::class, 'destroy'])->name('deleteLaboratorium');
+
         Route::get('/jadwal', [JadwalController::class, 'index'])->name('masterJadwal');
         Route::post('/jadwal', [JadwalController::class, 'store'])->name('addJadwal');
         Route::put('/jadwal/{id}', [JadwalController::class, 'update'])->name('updateJadwal');
         Route::delete('/jadwal/{id}', [JadwalController::class, 'destroy'])->name('deleteJadwal');
+
         Route::get('/pertemuan', [PertemuanController::class, 'index'])->name('masterPertemuan');
         Route::post('/pertemuan', [PertemuanController::class, 'store'])->name('addPertemuan');
         Route::put('/pertemuan/{id}', [PertemuanController::class, 'update'])->name('updatePertemuan');
         Route::delete('/pertemuan/{id}', [PertemuanController::class, 'destroy'])->name('deletePertemuan');
+       
+        Route::get('/pretest', [pretestController::class, 'index'])->name('masterpretest');
+        Route::delete('/pretest/{id}', [pretestController::class, 'destroy'])->name('deletepretest');
+
         Route::get('/asisten/{id}', [AsistenController::class, 'index'])->name('alokasiAsisten');
         Route::post('/asisten/{id}', [AsistenController::class, 'store'])->name('storeAlokasiAsisten');
         Route::delete('/asisten/{praktikumId}/{asistenId}', [AsistenController::class, 'destroy'])->name('deleteAlokasiAsisten');
+
         Route::get('/laporan', [LaporanController::class, 'masterLaporan'])->name('masterLaporan');
         Route::get('/pengumpulanLaporan', [LaporanController::class, 'adminShowLaporan'])->name('kelolaLaporan');
         Route::get('/nilai', [NilaiController::class, 'masterNilai'])->name('kelolaNilai');
