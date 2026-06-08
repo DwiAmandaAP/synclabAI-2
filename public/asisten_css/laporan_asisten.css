@@ -1,0 +1,688 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+body {
+  display: flex;
+  background: #f4f6f9;
+}
+
+.sidebar {
+  width: 250px;
+  height: 100vh;
+  background: #0f172a;
+  color: white;
+  padding: 20px;
+  position: fixed;
+  left: 0;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.menu-toggle {
+  display: none;
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  z-index: 2000;
+  background: #111827;
+  color: white;
+  border: none;
+  padding: 8px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.profile {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.profile span {
+  font-size: 13px;
+  color: #cbd5f5;
+}
+
+.profile small {
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+.profile span,
+.profile small {
+  display: block;
+}
+
+.avatar {
+  width: 70px;
+  height: 70px;
+  background: linear-gradient(135deg, #a78bfa, #6366f1);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: auto;
+  margin-bottom: 10px;
+}
+
+.avatar i {
+  font-size: 28px;
+}
+
+.menu {
+  list-style: none;
+  flex-grow: 1;
+}
+
+.menu li {
+  padding: 12px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.menu li:hover {
+  background: rgba(255,255,255,0.1);
+}
+
+.menu li i {
+  margin-right: 10px;
+}
+
+.menu .active {
+  background: rgba(255,255,255,0.2);
+}
+
+.dropdown ul {
+  list-style: none;
+  padding-left: 15px;
+  max-height: 0;
+  overflow: hidden;
+  transition: 0.3s;
+}
+
+.dropdown ul.open {
+  max-height: 200px;
+}
+
+.logout {
+  background: #ef4444;
+  border: none;
+  padding: 10px;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.main-content {
+  padding: 30px;
+  width: calc(100% - 250px); 
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.header h2 {
+  color: #374151;
+}
+
+.filter-box {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.filter-box select,
+.filter-box input {
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
+.table-container {
+  background: white;
+  border-radius: 12px;
+  padding: 0;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  overflow: hidden;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+thead th {
+  padding: 12px;
+  text-align: center;
+  background: #e0f2fe;
+  color: #0369a1;
+}
+
+tbody td {
+  padding: 12px 10px;
+  border-bottom: 1px solid #eee;
+  text-align: center;
+  vertical-align: middle;
+  position: relative;
+}
+
+tbody td:nth-child(6) {
+  text-align: center;
+  vertical-align: middle;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+td:nth-child(6) {
+  text-align: center;
+}
+
+tbody tr:hover {
+  background: #f9fafb;
+}
+
+.actions-btn button {
+  border: none;
+  padding: 5px 8px;
+  margin-right: 5px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.status {
+  border: none;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: default;
+  pointer-events: none; 
+  display: inline-block;
+  min-width: 90px; 
+}
+
+.status.diterima {
+  background: #bbf7d0;
+  color: #166534;
+}
+
+.status.revisi {
+  background: #fde68a;
+  color: #92400e;
+}
+
+.actions-btn .detail {
+  border: none;
+  padding: 6px 10px;
+  border-radius: 20px;
+  cursor: pointer;
+  background: #e0e7ff;
+  color: #3730a3;
+}
+
+.actions-btn .detail:hover {
+  background: #c7d2fe;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.4);
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background: white;
+  width: 450px;
+  padding: 20px;
+  border-radius: 12px;
+}
+
+.info-box {
+  background: #f3f4f6;
+  padding: 12px;
+  border-radius: 10px;
+  margin: 10px 0;
+  font-size: 13px;
+}
+
+.form-group {
+  margin-bottom: 10px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 13px;
+  margin-bottom: 5px;
+}
+
+textarea, input, select {
+  width: 100%;
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 15px;
+}
+
+.btn-cancel {
+  background: #e5e7eb;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.btn-save {
+  background: #6366f1;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+@media (max-width: 1200px) {
+  .main-content {
+    padding: 25px;
+    width: calc(100% - 250px);
+  }
+  .filter-box {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .filter-box select,
+  .filter-box input {
+    flex: 1;
+    min-width: 160px;
+  }
+  .table-container {
+    overflow-x: auto;
+    width: 100%;
+    display: block;
+  }
+  table {
+    min-width: 800px;
+    width: 100%;
+  }
+  thead th {
+    padding: 10px 8px;
+    font-size: 13px;
+  }
+  tbody td {
+    padding: 10px 8px;
+    font-size: 13px;
+  }
+  .status {
+    padding: 5px 12px;
+    font-size: 11px;
+    min-width: 80px;
+  }
+  .actions-btn .detail {
+    padding: 5px 10px;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .main-content {
+    padding: 20px;
+    width: calc(100% - 250px);
+  }
+  .filter-box select,
+  .filter-box input {
+    min-width: 140px;
+  }
+  .table-container {
+    overflow-x: auto;
+    width: 100%;
+    display: block;
+  }
+  table {
+    min-width: 750px;
+    width: 100%;
+  }
+  thead th {
+    padding: 10px 8px;
+    font-size: 13px;
+  }
+  tbody td {
+    padding: 8px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 768px) {
+  .menu-toggle {
+    display: block;
+  }
+  .sidebar {
+    position: fixed;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    z-index: 1000;
+    height: 100vh;
+    overflow-y: auto;
+  }
+  .sidebar.show {
+    transform: translateX(0);
+  }
+  .main-content {
+    margin-left: 0;
+    padding: 70px 15px 20px 15px;
+    width: 100%;
+  }
+  .header {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .header h2 {
+    font-size: 20px;
+  }
+  .filter-box {
+    flex-direction: column;
+    gap: 10px;
+  }
+  .filter-box select,
+  .filter-box input {
+    width: 100%;
+    min-width: auto;
+  }
+  .table-container {
+    padding: 0;
+    overflow-x: auto;
+    width: 100%;
+    display: block;
+  }
+  table {
+    min-width: 700px;
+    width: 100%;
+  }
+  thead th {
+    padding: 8px 6px;
+    font-size: 12px;
+  }
+  tbody td {
+    padding: 8px 6px;
+    font-size: 12px;
+  }
+  .status {
+    padding: 4px 10px;
+    font-size: 11px;
+    min-width: 75px;
+  }
+  .actions-btn .detail {
+    padding: 4px 8px;
+    font-size: 11px;
+  }
+  .modal-content {
+    width: 90%;
+    margin: 0 15px;
+    padding: 18px;
+  }
+  .modal-content h2 {
+    font-size: 18px;
+  }
+  .info-box p {
+    font-size: 12px;
+    margin: 4px 0;
+  }
+  .form-group label {
+    font-size: 12px;
+  }
+  textarea, input, select {
+    padding: 6px 8px;
+    font-size: 12px;
+  }
+  .modal-actions {
+    flex-direction: column;
+    gap: 8px;
+  }
+  .modal-actions button {
+    width: 100%;
+    padding: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .main-content {
+    padding: 60px 12px 15px 12px;
+  }
+  .header h2 {
+    font-size: 18px;
+  }
+  .filter-box {
+    gap: 8px;
+  }
+  .table-container {
+    overflow-x: auto;
+    width: 100%;
+    display: block;
+  }
+  table {
+    min-width: 620px;
+    width: 100%;
+  }
+  thead th {
+    padding: 6px 4px;
+    font-size: 11px;
+  }
+  tbody td {
+    padding: 6px 4px;
+    font-size: 11px;
+  }
+  .status {
+    padding: 3px 8px;
+    font-size: 10px;
+    min-width: 65px;
+  }
+  .actions-btn .detail {
+    padding: 3px 6px;
+    font-size: 10px;
+  }
+  .menu-toggle {
+    top: 12px;
+    left: 12px;
+    padding: 6px 10px;
+    font-size: 1rem;
+  }
+  .sidebar {
+    width: 260px;
+  }
+  .modal-content {
+    width: 95%;
+    padding: 15px;
+  }
+  .modal-content h2 {
+    font-size: 16px;
+  }
+  .info-box {
+    padding: 10px;
+  }
+  .info-box p {
+    font-size: 11px;
+  }
+  .form-group {
+    margin-bottom: 8px;
+  }
+  textarea, input, select {
+    padding: 5px 6px;
+    font-size: 11px;
+  }
+  .modal-actions button {
+    padding: 6px;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 360px) {
+  .main-content {
+    padding: 55px 10px 12px 10px;
+  }
+  .header h2 {
+    font-size: 16px;
+  }
+  .table-container {
+    overflow-x: auto;
+  }
+  table {
+    min-width: 560px;
+    width: 100%;
+  }
+  thead th {
+    font-size: 10px;
+    padding: 5px 3px;
+  }
+  tbody td {
+    font-size: 10px;
+    padding: 5px 3px;
+  }
+  .status {
+    padding: 2px 6px;
+    font-size: 9px;
+    min-width: 55px;
+  }
+  .actions-btn .detail {
+    padding: 2px 5px;
+    font-size: 9px;
+  }
+  .modal-content {
+    padding: 12px;
+  }
+  .info-box p {
+    font-size: 10px;
+  }
+  textarea, input, select {
+    padding: 4px 5px;
+    font-size: 10px;
+  }
+  .modal-actions button {
+    padding: 5px;
+    font-size: 11px;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1023px) {
+  .main-content {
+    padding: 25px 20px;
+    width: calc(100% - 250px);
+  }
+  .filter-box {
+    flex-wrap: wrap;
+  }
+  .filter-box select,
+  .filter-box input {
+    flex: 1;
+    min-width: 170px;
+  }
+  .table-container {
+    overflow-x: auto;
+    width: 100%;
+  }
+  table {
+    min-width: 720px;
+    width: 100%;
+  }
+}
+
+@media (min-width: 1025px) and (max-width: 1280px) {
+  .main-content {
+    padding: 30px 35px;
+    width: calc(100% - 250px);
+  }
+  .filter-box select,
+  .filter-box input {
+    padding: 8px 12px;
+  }
+  .table-container {
+    overflow-x: auto;
+  }
+  table {
+    min-width: 750px;
+    width: 100%;
+  }
+}
+
+@media (min-width: 1281px) {
+  .main-content {
+    max-width: 1600px;
+    margin: 0 auto;
+    width: calc(100% - 250px);
+  }
+  .table-container {
+    overflow-x: visible;
+  }
+  table {
+    min-width: auto;
+    width: 100%;
+  }
+}
+
+@media (max-width: 576px) {
+  .modal-actions {
+    flex-direction: column;
+    gap: 8px;
+  }
+  .modal-actions button {
+    width: 100%;
+  }
+  .filter-box {
+    margin-bottom: 15px;
+  }
+}
+
+.main-content {
+  padding: 30px;
+  width: calc(100% - 250px);
+  max-width: 100%;
+}
+
+.table-container {
+  overflow-x: auto;
+  width: 100%;
+  display: block;
+  background: white;
+  border-radius: 12px;
+  padding: 0;
+  margin: 0;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: auto;
+  min-width: 100%;
+}
+
+.actions-btn {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 5px;
+  flex-wrap: nowrap;
+}
+
+.actions-btn button {
+  white-space: nowrap;
+}
+
+.filter-box {
+  width: 100%;
+}

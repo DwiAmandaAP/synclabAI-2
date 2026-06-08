@@ -1,0 +1,100 @@
+body {
+  font-family: Arial, sans-serif;
+  background: white;
+  padding: 30px;
+  color: #333;
+}
+
+.container {
+  max-width: 900px;
+  margin: auto;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.header h2 {
+  margin: 0;
+}
+
+.info {
+  margin-bottom: 20px;
+}
+
+.info table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.info td {
+  padding: 6px 10px;
+  font-size: 14px;
+}
+
+.main-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.main-table th {
+  background: #f0f0f0;
+  padding: 10px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+
+.main-table td {
+  padding: 10px;
+  border: 1px solid #ccc;
+  font-size: 13px;
+}
+
+.main-table th,
+.main-table td {
+  text-align: center;
+}
+
+.hadir {
+  color: green;
+  font-weight: bold;
+}
+
+.izin {
+  color: orange;
+  font-weight: bold;
+}
+
+.sakit {
+  color: blue;
+  font-weight: bold;
+}
+
+.alpha {
+  color: red;
+  font-weight: bold;
+}
+
+.recap {
+  width: 300px;
+  margin-top: 20px;
+}
+
+.recap table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.recap th {
+  background: #f0f0f0;
+  border: 1px solid #ccc;
+  padding: 8px;
+}
+
+.recap td {
+  border: 1px solid #ccc;
+  padding: 8px;
+  text-align: center;
+}
