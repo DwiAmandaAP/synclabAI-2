@@ -33,16 +33,20 @@ class JadwalSeeder extends Seeder
 
         foreach ($praktikums as $praktikum) {
             for ($i = 0; $i < 3; $i++) {
-                Jadwal::create([
-                    'id_praktikum' => $praktikum->id,
-                    'id_dosen' => $dosens[$i % $dosens->count()]->id,
-                    'id_laboratorium' => $laboratoriums[$i % $laboratoriums->count()]->id,
-                    'hari' => $days[$i % count($days)],
-                    'jam_mulai' => $timeSlots[$i % count($timeSlots)][0],
-                    'jam_selesai' => $timeSlots[$i % count($timeSlots)][1],
-                    'jumlah_max_peserta' => 20,
-                    'status' => 'Dibuka',
-                ]);
+                Jadwal::updateOrCreate(
+                    [
+                        'id_praktikum' => $praktikum->id,
+                        'id_dosen' => $dosens[$i % $dosens->count()]->id,
+                        'id_laboratorium' => $laboratoriums[$i % $laboratoriums->count()]->id,
+                        'hari' => $days[$i % count($days)],
+                        'jam_mulai' => $timeSlots[$i % count($timeSlots)][0],
+                    ],
+                    [
+                        'jam_selesai' => $timeSlots[$i % count($timeSlots)][1],
+                        'jumlah_max_peserta' => 20,
+                        'status' => 'Dibuka',
+                    ]
+                );
             }
         }
     }

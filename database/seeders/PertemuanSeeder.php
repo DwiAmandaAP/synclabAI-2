@@ -18,13 +18,17 @@ class PertemuanSeeder extends Seeder
 
         foreach ($jadwals as $jadwal) {
             for ($ke = 1; $ke <= 3; $ke++) {
-                Pertemuan::create([
-                    'id_praktikum' => $jadwal->id_praktikum,
-                    'id_jadwal' => $jadwal->id,
-                    'nama_pertemuan' => "Pertemuan {$ke}: " . $this->getName($jadwal->praktikum->kode_praktikum, $ke),
-                    'pertemuan_ke' => $ke,
-                    'deskripsi_pertemuan' => $this->getDesc($jadwal->praktikum->kode_praktikum, $ke),
-                ]);
+                Pertemuan::updateOrCreate(
+                    [
+                        'id_praktikum' => $jadwal->id_praktikum,
+                        'id_jadwal' => $jadwal->id,
+                        'pertemuan_ke' => $ke,
+                    ],
+                    [
+                        'nama_pertemuan' => "Pertemuan {$ke}: " . $this->getName($jadwal->praktikum->kode_praktikum, $ke),
+                        'deskripsi_pertemuan' => $this->getDesc($jadwal->praktikum->kode_praktikum, $ke),
+                    ]
+                );
             }
         }
     }

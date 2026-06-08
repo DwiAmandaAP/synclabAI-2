@@ -57,11 +57,23 @@ class NilaiSeeder extends Seeder
             }
         }
 
-        // Insert dalam batch untuk performa
+        // Update or create each nilai record to ensure idempotency
         if (!empty($nilais)) {
-            // Split into chunks to avoid memory issues
-            foreach (array_chunk($nilais, 50) as $chunk) {
-                Nilai::insert($chunk);
+            foreach ($nilais as $nilai) {
+                Nilai::updateOrCreate(
+                    [
+                        'id_pertemuan' => $nilai['id_pertemuan'],
+                        'id_user' => $nilai['id_user'],
+                    ],
+                    [
+                        'nilai_pretest' => $nilai['nilai_pretest'],
+                        'nilai_laporan' => $nilai['nilai_laporan'],
+                        'nilai_total' => $nilai['nilai_total'],
+                        'nilai_akhir' => $nilai['nilai_akhir'],
+                        'komentar' => $nilai['komentar'],
+                        'status' => $nilai['status'],
+                    ]
+                );
             }
         }
     }

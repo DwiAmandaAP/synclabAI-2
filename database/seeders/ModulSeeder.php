@@ -238,7 +238,16 @@ class ModulSeeder extends Seeder
 
         foreach ($moduls as $modul) {
             if ($modul['id_pertemuan']) {
-                Modul::create($modul);
+                Modul::updateOrCreate(
+                    [
+                        'id_pertemuan' => $modul['id_pertemuan'],
+                        'judul_modul' => $modul['judul_modul'],
+                    ],
+                    [
+                        'filepath' => $modul['filepath'],
+                        'deskripsi' => $modul['deskripsi'],
+                    ]
+                );
             }
         }
     }

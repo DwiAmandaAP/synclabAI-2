@@ -45,7 +45,10 @@ class PraktikumSeeder extends Seeder
         ];
 
         foreach ($praktikums as $praktikum) {
-            Praktikum::create($praktikum);
+            Praktikum::updateOrCreate(
+                ['kode_praktikum' => $praktikum['kode_praktikum']],
+                $praktikum
+            );
         }
     }
 }
