@@ -54,8 +54,9 @@
     <!-- Flashcard List -->
     @forelse($groupedFlashcards as $pertemuanId => $cards)
         @php
-            $pertemuan = $cards->first()?->pertemuan ?? null;
-            $praktikum = $pertemuan?->praktikum ?? null;
+            $firstCard  = $cards->first();
+            $pertemuan  = $firstCard?->modul?->pertemuan ?? null;
+            $praktikum  = $pertemuan?->praktikum ?? null;
         @endphp
 
         <div style="margin-bottom: 30px;">
